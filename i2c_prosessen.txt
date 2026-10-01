@@ -1,0 +1,55 @@
+https://learn.sparkfun.com/tutorials/i2c/all
+
+Så det blir da
+
+START
+Send 1001011 & 0 (Jeg sier til adressen jeg skal skrive)
+
+Mottar ACK 0 fra sensor
+
+Skriver 0x00 (register adressen jeg vil lese fra)
+
+Mottar ACK 0 fra sensor
+
+
+Skriver 1001011 & 1 (Sier til sensor at jeg vil lese)
+
+Mottar ACK 0 fra sensor
+
+Sensor skriver første byte fra startpunkt 0x00
+
+Jeg sender ACK 0
+
+Sensor skriver andre byte fra startpunkt 0x00
+
+Jeg sender NACK 1 (Jeg er ferdig)
+
+
+Stopper I2C prosessen
+
+
+
+type stage is (
+        IDLE,
+        
+        -- Start I2C kommunikasjons prosess 
+        START1,
+        
+        -- Skriver til adressen (temp sensor) at jeg skal skrive    
+        ADDRESS,
+        ACK_ADDRESS,
+        -- Sir at den skal starte å lese fra register adresse 0x0.
+        READREGISTER,
+        ACK_REGISTER,
+        
+        --REPEATED START: Starter på nytt, og skal nå hente ut data fra sensoren
+        START2,
+        ACK_START2,
+        
+        DATAFRAME1, -- Byte en fra start 0x00
+        ACK_DATA1,  -- Hent mer data
+        DATEFRAME2, -- Byte to fra start 0x00
+        NACK_DATA2, -- Ferdig å hente data
+        
+        STOP
+    );
